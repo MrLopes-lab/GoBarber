@@ -2,24 +2,29 @@ import * as Yup from 'yup';
 import User from '../models/User';
 
 class UserController {
+  // CRIAR UM NOVO USER
   async store(req, res) {
     const schema = Yup.object().shape({
       name: Yup.string().required(),
-      email: Yup.string().required(),
+      email: Yup.string()
+        .email()
+        .required(),
       password: Yup.string()
         .required()
         .min(6)
     });
-
+    // Validação do req.body
     if (!(await schema.isValid(req.body))) {
       return res.status(400).json({ error: 'Validation fails!' });
     }
 
+    // Procura se já existe um usuario cadastrado
     const userExists = await User.findOne({ where: { email: req.body.email } });
 
     if (userExists) {
-      return res.status(400).json({ error: 'User already exists!' });
+      return res.status(400).json({ error: 'User already exists!' }); // Usuario já existe
     }
+
     const { id, name, email, provider } = await User.create(req.body);
 
     return res.json({
@@ -30,10 +35,11 @@ class UserController {
     });
   }
 
+  // UPDATE DE DADOS DO USER
   async update(req, res) {
     const schema = Yup.object().shape({
       name: Yup.string(),
-      email: Yup.string(),
+      email: Yup.string().email(),
       oldPassword: Yup.string().min(6),
       password: Yup.string()
         .min(6)

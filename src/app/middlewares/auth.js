@@ -1,8 +1,9 @@
 import jwt from 'jsonwebtoken';
-import { promisify } from 'util';
+import { promisify } from 'util'; // transforma uma função de callback em async
 
 import authConfig from '../../config/auth';
 
+// Autenticação utilizando o token gerado
 export default async (req, res, next) => {
   const authHeader = req.headers.authorization;
 
