@@ -7,7 +7,7 @@ class CancellationMail {
     return 'CancellationMail';
   }
 
-  async hadle({ data }) {
+  async handle({ data }) {
     const { appointment } = data;
 
     await Mail.sendMail({
